@@ -42,6 +42,7 @@ public static class ContatoEndpoints
             try
             {
                 contato.Id = Guid.NewGuid();
+                contato.PessoaId = personId;
 
                 await service.AddAsync(contato);
 
@@ -54,10 +55,12 @@ public static class ContatoEndpoints
         })
         .WithTags("Contact");
 
-        app.MapPut("/api/persons/{personId:Guid}/contacts/{id:Guid}", async (IContatoService service, Guid personId, Contato contato) =>
+        app.MapPut("/api/persons/{personId:Guid}/contacts/{id:Guid}", async (IContatoService service, Guid personId, Guid id, Contato contato) =>
         {
             try
             {
+                contato.PessoaId = personId;
+
                 await service.UpdateAsync(contato);
 
                 return Results.Ok(contato);
