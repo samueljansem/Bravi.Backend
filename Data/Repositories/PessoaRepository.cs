@@ -1,12 +1,18 @@
 using Bravi.Backend.Data.Context;
 using Bravi.Backend.Domain.Entities;
 using Bravi.Backend.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bravi.Backend.Data.Repositories;
 
 public class PessoaRepository : BaseRepository<Pessoa>, IPessoaRepository
 {
-    public PessoaRepository(BraviDbContext context) : base(context) { }
+    private readonly BraviDbContext _context;
+
+    public PessoaRepository(BraviDbContext context) : base(context)
+    {
+        _context = context;
+    }
 
     public async Task AdicionarAsync(Pessoa pessoa)
     {
@@ -25,11 +31,11 @@ public class PessoaRepository : BaseRepository<Pessoa>, IPessoaRepository
 
     public async Task<Pessoa?> ObterAsync(Guid id)
     {
-        return await base.GetAsync(id);
+        return await _context.Set<Pessoa>().Include(x => x.Contatos).Where(x => x.Id == id).FirstOrDefaultAsync();
     }
 
     public async Task<IEnumerable<Pessoa>> ObterTodosAsync()
     {
-        return await base.GetAllAsync();
+        return await _context.Set<Pessoa>().Include(x => x.Contatos).ToListAsync();
     }
 }
