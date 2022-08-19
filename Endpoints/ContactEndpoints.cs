@@ -3,15 +3,15 @@ using Bravi.Backend.Domain.Interfaces;
 
 namespace Bravi.Backend.Endpoints;
 
-public static class ContatoEndpoints
+public static class ContactEndpoints
 {
-    public static WebApplication MapContatoEndpoints(this WebApplication app)
+    public static WebApplication MapContactEndpoints(this WebApplication app)
     {
-        app.MapGet("/api/persons/{personId:Guid}/contacts", async (IContatoService service, Guid personId) =>
+        app.MapGet("/api/contacts", async (IContactRepository service) =>
         {
             try
             {
-                var persons = await service.GetAllAsync(personId);
+                var persons = await service.ListAsync();
 
                 return Results.Ok(persons);
             }
@@ -22,11 +22,43 @@ public static class ContatoEndpoints
         })
         .WithTags("Contact");
 
-        app.MapGet("/api/persons/{personId:Guid}/contacts/{id:Guid}", async (IContatoService service, Guid id) =>
+        app.MapGet("/api/contacts/{id:Guid}", async (IContactRepository service, Guid id) =>
         {
             try
             {
-                var contact = await service.GetAsync(id);
+                var person = await service.FindAsync(id);
+
+                return Results.Ok(person);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest();
+            }
+        })
+        .WithTags("Contact");
+
+        app.MapPost("/api/contacts", async (IContactRepository service, Contact contact) =>
+        {
+            try
+            {
+                contact.Id = Guid.NewGuid();
+
+                await service.AddAsync(contact);
+
+                return Results.Created($"/api/contacts/{contact.Id}", contact);
+            }
+            catch (Exception e)
+            {
+                return Results.BadRequest();
+            }
+        })
+        .WithTags("Contact");
+
+        app.MapPut("/api/contacts/{id:Guid}", async (IContactRepository service, Contact contact) =>
+        {
+            try
+            {
+                await service.UpdateAsync(contact);
 
                 return Results.Ok(contact);
             }
@@ -37,42 +69,7 @@ public static class ContatoEndpoints
         })
         .WithTags("Contact");
 
-        app.MapPost("/api/persons/{personId:Guid}/contacts", async (IContatoService service, Guid personId, Contato contato) =>
-        {
-            try
-            {
-                contato.Id = Guid.NewGuid();
-                contato.PessoaId = personId;
-
-                await service.AddAsync(contato);
-
-                return Results.Created($"/api/contacts/{contato.Id}", contato);
-            }
-            catch (Exception e)
-            {
-                return Results.BadRequest();
-            }
-        })
-        .WithTags("Contact");
-
-        app.MapPut("/api/persons/{personId:Guid}/contacts/{id:Guid}", async (IContatoService service, Guid personId, Guid id, Contato contato) =>
-        {
-            try
-            {
-                contato.PessoaId = personId;
-
-                await service.UpdateAsync(contato);
-
-                return Results.Ok(contato);
-            }
-            catch (Exception e)
-            {
-                return Results.BadRequest();
-            }
-        })
-        .WithTags("Contact");
-
-        app.MapDelete("/api/persons/{personId:Guid}/contacts/{id:Guid}", async (IContatoService service, Guid personId, Guid id) =>
+        app.MapDelete("/api/contacts/{id:Guid}", async (IContactRepository service, Guid id) =>
         {
             try
             {

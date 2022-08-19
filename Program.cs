@@ -12,8 +12,8 @@ builder.Services.AddBraviServices(configuration);
 
 var app = builder.Build();
 
-app.MapPessoaEndpoints();
-app.MapContatoEndpoints();
+app.MapContactEndpoints();
+app.MapContactMethodEndpoints();
 
 if (app.Environment.IsDevelopment())
 {

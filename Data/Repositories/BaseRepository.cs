@@ -44,7 +44,7 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
     }
 
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync()
+    public async Task<IEnumerable<TEntity>> ListAsync()
     {
         try
         {
@@ -56,7 +56,7 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         }
     }
 
-    public async Task<TEntity?> GetAsync(Guid id)
+    public async Task<TEntity?> FindAsync(Guid id)
     {
         try
         {

@@ -15,3 +15,5 @@
 -   Microsoft.EntityFrameworkCore.Sqlite.Design
 
 ### Como rodar o projeto
+
+dotnet ef database update

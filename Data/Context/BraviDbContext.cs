@@ -8,13 +8,13 @@ public class BraviDbContext : DbContext
 {
     public BraviDbContext(DbContextOptions options) : base(options) { }
 
-    public DbSet<Pessoa> Pessoas { get; set; }
-    public DbSet<Contato> Contatos { get; set; }
+    public DbSet<Contact> Pessoas { get; set; }
+    public DbSet<ContactMethod> Contatos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Pessoa>(new PessoaConfiguration().Configure);
-        builder.Entity<Contato>(new ContatoConfiguration().Configure);
+        builder.Entity<Contact>(new ContactConfiguration().Configure);
+        builder.Entity<ContactMethod>(new ContactMethodConfiguration().Configure);
 
         base.OnModelCreating(builder);
     }

@@ -1,4 +1,3 @@
-using Bravi.Backend.Application.Services;
 using Bravi.Backend.Data.Context;
 using Bravi.Backend.Data.Repositories;
 using Bravi.Backend.Domain.Interfaces;
@@ -15,11 +14,8 @@ public static class DependencyInjectionConfig
             options.UseSqlite(configuration.GetConnectionString("LocalDb"));
         });
 
-        services.AddScoped<IPessoaRepository, PessoaRepository>();
-        services.AddScoped<IContatoRepository, ContatoRepository>();
-
-        services.AddScoped<IPessoaService, PessoaService>();
-        services.AddScoped<IContatoService, ContatoService>();
+        services.AddScoped<IContactRepository, ContactRepository>();
+        services.AddScoped<IContactMethodRepository, ContactMethodRepository>();
 
         services.AddCors(options =>
         {
